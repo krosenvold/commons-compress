@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.apache.commons.compress.AbstractTestCase;
 import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.apache.commons.compress.compressors.TestCaseUtils;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 import org.junit.Test;
@@ -58,27 +59,10 @@ public final class FramedSnappyCompressorInputStreamTest
         final File outputGz = new File(dir, "lorem-ipsum.2");
         try (FileInputStream isSz = new FileInputStream(getFile("lorem-ipsum.txt.sz"))) {
             InputStream in = new FramedSnappyCompressorInputStream(isSz);
-            FileOutputStream out = null;
-            try {
-                out = new FileOutputStream(outputSz);
-                IOUtils.copy(in, out);
-            } finally {
-                if (out != null) {
-                    out.close();
-                }
-                in.close();
-            }
+            TestCaseUtils.copy( in, outputSz);
             try (FileInputStream isGz = new FileInputStream(getFile("lorem-ipsum.txt.gz"))) {
                 in = new GzipCompressorInputStream(isGz);
-                try {
-                    out = new FileOutputStream(outputGz);
-                    IOUtils.copy(in, out);
-                } finally {
-                    if (out != null) {
-                        out.close();
-                    }
-                    in.close();
-                }
+                TestCaseUtils.copy( in, outputGz);
             }
         }
 

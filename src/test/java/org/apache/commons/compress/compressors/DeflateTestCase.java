@@ -80,16 +80,7 @@ public final class DeflateTestCase extends AbstractTestCase {
         try (InputStream is = new FileInputStream(input)) {
             final CompressorInputStream in = new CompressorStreamFactory()
                     .createCompressorInputStream("deflate", is); // zlib header is expected by default
-            FileOutputStream out = null;
-            try {
-                out = new FileOutputStream(output);
-                IOUtils.copy(in, out);
-            } finally {
-                if (out != null) {
-                    out.close();
-                }
-                in.close();
-            }
+            TestCaseUtils.copy( in, output);
         }
     }
 
@@ -106,16 +97,7 @@ public final class DeflateTestCase extends AbstractTestCase {
             final DeflateParameters params = new DeflateParameters();
             params.setWithZlibHeader(false);
             final CompressorInputStream in = new DeflateCompressorInputStream(is, params);
-            FileOutputStream out = null;
-            try {
-                out = new FileOutputStream(output);
-                IOUtils.copy(in, out);
-            } finally {
-                if (out != null) {
-                    out.close();
-                }
-                in.close();
-            }
+            TestCaseUtils.copy(in, output);
         }
     }
 }

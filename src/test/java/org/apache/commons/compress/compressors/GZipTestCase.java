@@ -18,6 +18,7 @@
  */
 package org.apache.commons.compress.compressors;
 
+import static org.apache.commons.compress.compressors.TestCaseUtils.copy;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
@@ -60,16 +61,7 @@ public final class GZipTestCase extends AbstractTestCase {
         try (InputStream is = new FileInputStream(input)) {
             final CompressorInputStream in = new CompressorStreamFactory()
                     .createCompressorInputStream("gz", is);
-            FileOutputStream out = null;
-            try {
-                out = new FileOutputStream(output);
-                IOUtils.copy(in, out);
-            } finally {
-                if (out != null) {
-                    out.close();
-                }
-                in.close();
-            }
+            copy( in, output);
         }
     }
 

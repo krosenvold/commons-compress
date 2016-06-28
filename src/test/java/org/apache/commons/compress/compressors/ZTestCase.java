@@ -18,6 +18,7 @@
  */
 package org.apache.commons.compress.compressors;
 
+import static org.apache.commons.compress.compressors.TestCaseUtils.copy;
 import static org.junit.Assert.*;
 
 import java.io.BufferedInputStream;
@@ -82,17 +83,7 @@ public final class ZTestCase extends AbstractTestCase {
         final File input = getFile("bla.tar.Z");
         final File output = new File(dir, "bla.tar");
         try (InputStream is = new FileInputStream(input)) {
-            final InputStream in = wrapper.wrap(is);
-            FileOutputStream out = null;
-            try {
-                out = new FileOutputStream(output);
-                IOUtils.copy(in, out);
-            } finally {
-                if (out != null) {
-                    out.close();
-                }
-                in.close();
-            }
+            copy(wrapper.wrap(is), output);
         }
     }
 

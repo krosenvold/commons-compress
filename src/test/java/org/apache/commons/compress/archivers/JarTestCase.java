@@ -18,16 +18,14 @@
  */
 package org.apache.commons.compress.archivers;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import org.apache.commons.compress.AbstractTestCase;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.compressors.TestCaseUtils;
 import org.apache.commons.compress.utils.IOUtils;
 import org.junit.Test;
+
+import java.io.*;
+import java.nio.file.Files;
 
 public final class JarTestCase extends AbstractTestCase {
 
@@ -88,26 +86,9 @@ public final class JarTestCase extends AbstractTestCase {
     @Test
     public void testJarUnarchiveAll() throws Exception {
         final File input = getFile("bla.jar");
-        final InputStream is = new FileInputStream(input);
-        final ArchiveInputStream in = new ArchiveStreamFactory().createArchiveInputStream("jar", is);
-
-        ArchiveEntry entry = in.getNextEntry();
-        while (entry != null) {
-            final File archiveEntry = new File(dir, entry.getName());
-            archiveEntry.getParentFile().mkdirs();
-            if(entry.isDirectory()){
-                archiveEntry.mkdir();
-                entry = in.getNextEntry();
-                continue;
-            }
-            final OutputStream out = new FileOutputStream(archiveEntry);
-            IOUtils.copy(in, out);
-            out.close();
-            entry = in.getNextEntry();
+        try (InputStream is = new FileInputStream(input) ;
+             ArchiveInputStream in = new ArchiveStreamFactory().createArchiveInputStream("jar", is)) {
+                TestCaseUtils.extractArchive(in, dir);
         }
-
-        in.close();
-        is.close();
     }
-
 }

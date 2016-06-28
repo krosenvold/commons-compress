@@ -70,26 +70,11 @@ public final class Pack200TestCase extends AbstractTestCase {
         try (InputStream is = useFile
                 ? new Pack200CompressorInputStream(input, mode)
                 : new Pack200CompressorInputStream(new FileInputStream(input),
-                mode)) {
-            final ArchiveInputStream in = new ArchiveStreamFactory()
-                    .createArchiveInputStream("jar", is);
+                mode) ;
+             ArchiveInputStream in = new ArchiveStreamFactory()
+                    .createArchiveInputStream("jar", is)){;
 
-            ArchiveEntry entry = in.getNextEntry();
-            while (entry != null) {
-                final File archiveEntry = new File(dir, entry.getName());
-                archiveEntry.getParentFile().mkdirs();
-                if (entry.isDirectory()) {
-                    archiveEntry.mkdir();
-                    entry = in.getNextEntry();
-                    continue;
-                }
-                final OutputStream out = new FileOutputStream(archiveEntry);
-                IOUtils.copy(in, out);
-                out.close();
-                entry = in.getNextEntry();
-            }
-
-            in.close();
+            TestCaseUtils.extractArchive( in, dir);
         }
     }
 
